@@ -57,7 +57,7 @@
 + (void)removeCachedResponsesSinceDate:(NSDate *)date;
 
 /**
- *  get 异步请求
+ *  get 请求
  *
  *  @param uri               请求URL
  *  @param parameters        请求参数,NSData(POST) or NSDictionary
@@ -69,7 +69,7 @@
 + (void) getUrl:(NSString *)uri parameters:(id)parameters timeoutInterval:(NSTimeInterval)timeoutInterval cachPolicy:(CJRequestCachePolicy)cachPolicy completionHandler:(void (^)(NSData *data, NSURLResponse *response))completionHandler errorHandler:(void (^)(NSError *error))errorHandler;
 
 /**
- *  post 异步请求
+ *  post 请求
  *
  *  @param uri               请求URL
  *  @param parameters        请求参数,NSData(POST) or NSDictionary

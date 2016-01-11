@@ -24,23 +24,30 @@
 
 + (NSUInteger)getCacheCapacity
 {
-    NSUInteger cacheCapacity = [NSURLCache sharedURLCache].currentMemoryUsage + [NSURLCache sharedURLCache].currentDiskUsage;
+//    NSUInteger cacheCapacity = [NSURLCache sharedURLCache].currentMemoryUsage + [NSURLCache sharedURLCache].currentDiskUsage;
+    NSUInteger cacheCapacity = [NSURLCache sharedURLCache].currentDiskUsage;
     return cacheCapacity;
 }
 
 + (void)removeCachedResponseForRequest:(NSURLRequest *)request
 {
-    [[NSURLCache sharedURLCache] removeCachedResponseForRequest:request];
+    @synchronized([NSURLCache sharedURLCache]) {
+        [[NSURLCache sharedURLCache] removeCachedResponseForRequest:request];
+    }
 }
 
 + (void)removeAllCachedResponses
 {
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    @synchronized([NSURLCache sharedURLCache]) {
+        [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    }
 }
 
 + (void)removeCachedResponsesSinceDate:(NSDate *)date
 {
-    [[NSURLCache sharedURLCache] removeCachedResponsesSinceDate:date];
+    @synchronized([NSURLCache sharedURLCache]) {
+        [[NSURLCache sharedURLCache] removeCachedResponsesSinceDate:date];
+    }
 }
 
 + (void) getUrl:(NSString *)uri parameters:(id)parameters timeoutInterval:(NSTimeInterval)timeoutInterval cachPolicy:(CJRequestCachePolicy)cachPolicy completionHandler:(void (^)(NSData *data, NSURLResponse *response))completionHandler errorHandler:(void (^)(NSError *error))errorHandler
@@ -74,12 +81,14 @@
                                                     completionHandler(data,response);
                                                 });
                                                 if (cachPolicy == CJRequestIgnoringLocalCacheData) {
+                                                    //忽略缓存，删除缓存
                                                     [CJHttpClient removeCachedResponseForRequest:request];
                                                 }
                                             }else{
                                                 dispatch_async_main_queue(^{
                                                     errorHandler(error);
                                                 });
+                                                //请求出错，删除缓存
                                                 [CJHttpClient removeCachedResponseForRequest:request];
                                             }
                                         }];

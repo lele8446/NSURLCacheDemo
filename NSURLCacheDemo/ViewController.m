@@ -48,6 +48,7 @@
     }errorHandler:^(NSError *error){
         NSLog(@"error %@",error);
     }];
+    NSLog(@"next");
 }
 
 - (IBAction)postUrl:(id)sender
@@ -63,6 +64,7 @@
     }errorHandler:^(NSError *error){
         NSLog(@"error %@",error);
     }];
+    NSLog(@"next");
 }
 
 - (IBAction)clearCache:(id)sender
